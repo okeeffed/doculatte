@@ -2,6 +2,8 @@
 
 > A JavaScript Docblockr-to-Markdown documentation writer.
 
+![Gif example of Doculatte](https://media.giphy.com/media/8vNZBu4rJYB6GX6qnS/giphy.gif)
+
 ## Install
 
 ```sh
