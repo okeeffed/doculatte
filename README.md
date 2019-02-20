@@ -79,7 +79,7 @@ npx doculatte run
 Given a basic folder structure:
 
 ```sh
-tmp
+.
 ├── five
 │   └── index.js
 ├── four
