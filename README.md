@@ -7,9 +7,7 @@
 ## Install
 
 ```sh
-$ yarn add doculatte --dev
-# or
-$ npm install --save-dev doculatte
+npm i -g doculatte
 ```
 
 ## Usage
@@ -70,7 +68,7 @@ $ doculatte help
     Github: https://github.com/okeeffed
 ```
 
-## Quick Usage
+## Quick Usage with npx
 
 ```sh
 npx doculatte run
