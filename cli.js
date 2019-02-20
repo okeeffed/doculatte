@@ -165,18 +165,22 @@ const setName = (writePath, arr, isFile) => {
         prefix = ' ' + argv.p;
     }
 
+    const mainBody = prefix + arr[arr.length - 1]
+        .split('.js')
+        .join('') + suffix;
+
     switch (true) {
         case argv.n && isFile:
-            value = writePath + '/' + argv.n + '.md';
+            value = argv.n;
             break;
         case argv.t && argv.t === 'start':
-            value = writePath + '/' + startCase(arr[arr.length - 1].split('.js').join('') + suffix);
+            value = startCase(mainBody);
             break;
         case argv.t && argv.t === 'camel':
-            value = writePath + '/' + camelCase(arr[arr.length - 1].split('.js').join('') + suffix);
+            value = camelCase(mainBody);
             break;
         case argv.t && argv.t === 'kebab':
-            value = writePath + '/' + kebabCase(arr[arr.length - 1].split('.js').join('') + suffix);
+            value = kebabCase(mainBody);
             break;
         default:
             value = snakeCase(arr[arr.length - 1].split('.js').join('') + suffix);
