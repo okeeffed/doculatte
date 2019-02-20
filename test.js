@@ -70,6 +70,43 @@ test.serial('should correctly use type "-t start"', async t => {
     t.regex(stdout, /Generated: tmp\/five\/Index Docs.md/gm);
 });
 
+test.serial('should correctly use type "-t kebab -u"', async t => {
+    const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-t', 'kebab', '-u']);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/INDEX-DOCS.md/gm);
+});
+
+test.serial('should correctly use prefix "-t kebab -u -p test"', async t => {
+    const {stdout} = await execa('./cli.js', [
+        'run',
+        'tmp/five/index.js',
+        '-t',
+        'kebab',
+        '-u',
+        '-p',
+        'test'
+    ]);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/TEST-INDEX-DOCS.md/gm);
+});
+
+test.serial('should correctly use suffix "-t kebab -u -s TEST"', async t => {
+    const {stdout} = await execa('./cli.js', [
+        'run',
+        'tmp/five/index.js',
+        '-t',
+        'kebab',
+        '-u',
+        '-s',
+        'test'
+    ]);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/INDEX-TEST.md/gm);
+});
+
 /**
  * Remove all .md from tmp dir before
  * running test using before hook.

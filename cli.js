@@ -48,7 +48,7 @@ const help = `
     -n                      Output doc name (only works for singular files)
     -t                      Output name type VALUES=[snake|start|camel|kebab] (default is snake, overriden by -n)
     -p                      Prefix doc file name (overriden by -n)
-    -s                      Suffix doc file name (overriden by -n)
+    -s                      Suffix doc file name (overriden by -n, default is "docs") 
     -o                      path/to/output folder (moves all written doc files)
     -u                      Set output doc name to uppercase
 
@@ -74,6 +74,12 @@ const run = async() => {
     try {
         signale.start('Running docs ' + argv._[0]);
 
+        /**
+         * Attempt to write the actual doc file
+         *
+         * @param {*} file File to convert
+         * @param {*} writeDocsPath Path to write it
+         */
         const createFile = (file, writeDocsPath) => {
             const mdOutput = jsdoc2md.renderSync({files: file});
 
@@ -162,7 +168,7 @@ const setName = (writePath, arr, isFile) => {
     }
 
     if (argv.p) {
-        prefix = ' ' + argv.p;
+        prefix = argv.p + ' ';
     }
 
     const mainBody = prefix + arr[arr.length - 1]
@@ -187,7 +193,7 @@ const setName = (writePath, arr, isFile) => {
     }
 
     if (argv.u) {
-        value.toUpperCase();
+        value = value.toUpperCase();
     }
 
     return writePath + '/' + value + '.md';
