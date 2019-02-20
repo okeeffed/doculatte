@@ -49,6 +49,27 @@ test.serial('should correctly use type "-t snake"', async t => {
     t.regex(stdout, /Generated: tmp\/five\/index_docs.md/gm);
 });
 
+test.serial('should correctly use type "-t kebab"', async t => {
+    const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-t', 'kebab']);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/index-docs.md/gm);
+});
+
+test.serial('should correctly use type "-t camel"', async t => {
+    const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-t', 'camel']);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/indexDocs.md/gm);
+});
+
+test.serial('should correctly use type "-t start"', async t => {
+    const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-t', 'start']);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/Index Docs.md/gm);
+});
+
 /**
  * Remove all .md from tmp dir before
  * running test using before hook.
