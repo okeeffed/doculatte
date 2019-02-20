@@ -52,11 +52,29 @@ const help = `
     -u                      Set output doc name to uppercase
 
     Examples
+    ---
+
     $ docs run -r
     > # recursively generate docs files
-    > Generated: path/to/FILE_DOCS.md
+    > Generated: path/to/file_docs.md
+
     $ docs run path/to/file.js
-    > Generated: path/to/FILE_DOCS.md
+    > Generated: path/to/file_docs.md
+
+    $ docs run path/to/file.js -p prefix -s suffix -u
+    > Generated: path/to/PREFIX_FILE_SUFFIX.md
+
+    $ docs run path/to/file.js -p prefix -s suffix -u -t kebab
+    > Generated: path/to/PREFIX-FILE-SUFFIX.md
+
+    $ docs run path/to/file.js -p prefix -s suffix -t camel
+    > Generated: path/to/prefixFileSuffix.md
+
+    $ docs run path/to/file.js -p prefix -s suffix -t start
+    > Generated: path/to/Prefix File Suffix.md
+
+    $ docs run path/to/file.js -n custom-name
+    > Generated: path/to/custom-name.md
 
     Built by Dennis O'Keeffe
 
