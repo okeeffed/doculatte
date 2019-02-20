@@ -42,6 +42,13 @@ test.serial('should correctly name output when passing "-n my-custom-name"', asy
     t.regex(stdout, /Generated: tmp\/five\/my-custom-name.md/gm);
 });
 
+test.serial('should correctly use type "-t snake"', async t => {
+    const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-t', 'snake']);
+    const files = await recursive('./tmp', ['!*.md']);
+    t.is(1, files.length);
+    t.regex(stdout, /Generated: tmp\/five\/my-custom-name.md/gm);
+});
+
 /**
  * Remove all .md from tmp dir before
  * running test using before hook.

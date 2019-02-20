@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Documentation creator
+ * Doculatte => JS markdown documentation builder
  *
  * @author
  * Dennis O'Keeffe
@@ -15,7 +15,6 @@ var jsdoc2md = require('jsdoc-to-markdown');
 const recursive = require('recursive-readdir');
 const kebabCase = require('lodash.kebabcase');
 const camelCase = require('lodash.camelcase');
-const upperFirst = require('lodash.upperfirst');
 const startCase = require('lodash.startcase');
 const snakeCase = require('lodash.snakecase');
 const path = require('path');
@@ -35,7 +34,7 @@ const signale = new Signale(options);
 const help = `
     Doculatte
 
-    Recurisvely build markdown docs for JS files
+    Recursively build markdown docs for JS files
 
     Command                 Exec
     ---------------         ---------------
@@ -47,16 +46,18 @@ const help = `
     ---------------         ---------------
     -i                      Ignore folders (paths as folders/files divided by commas)
     -n                      Output doc name (only works for singular files)
-    -t                      Output name type VALUES=[snake|start|camel|kebab]
-    -p                      Prefix doc file name
-    -s                      Suffix doc file name
+    -t                      Output name type VALUES=[snake|start|camel|kebab] (default is snake, overriden by -n)
+    -p                      Prefix doc file name (overriden by -n)
+    -s                      Suffix doc file name (overriden by -n)
     -o                      path/to/output folder (moves all written doc files)
+    -u                      Set output doc name to uppercase
 
     Examples
     $ docs run -r
-    > # recurisevely 
+    > # recursively generate docs files
+    > Generated: path/to/FILE_DOCS.md
     $ docs run path/to/file.js
-    > # generates path/to/FILE_DOCS.md
+    > Generated: path/to/FILE_DOCS.md
 
     Built by Dennis O'Keeffe
 
@@ -112,7 +113,7 @@ const run = async() => {
         if (argv._[0] === 'ls') {
             signale.info('Listing files that docs can be written for...');
             files.map(d => signale.info(d));
-            signale.success('docs ls completed');
+            signale.success('doculatte ls completed');
             process.exit(0);
         }
 
@@ -146,17 +147,42 @@ const run = async() => {
  *
  * @param {string} writePath Path to write to
  * @param {string[]} arr Path split into a string array
- * @param {bool} isFile Running in file or folder mode
+ * @param {boolean} isFile Running in file or folder mode
  *
  * @returns {string} Write path
  */
 const setName = (writePath, arr, isFile) => {
+    let value = '';
+
+    let suffix = ' docs.md';
+    let prefix = '';
+
+    if (argv.s) {
+        suffix = ' ' + argv.s;
+    }
+
+    if (argv.p) {
+        prefix = ' ' + argv.p;
+    }
+
     switch (true) {
         case argv.n && isFile:
-            return writePath + '/' + argv.n + '.md';
+            value = writePath + '/' + argv.n + '.md';
+            break;
+        case argv.t && argv.t === 'start':
+            value = writePath + '/' + startCase(arr[arr.length - 1].split('.js').join('') + suffix);
+            break;
+        case argv.t && argv.t === 'camel':
+            value = writePath + '/' + camelCase(arr[arr.length - 1].split('.js').join('') + suffix);
+            break;
+        case argv.t && argv.t === 'kebab':
+            value = writePath + '/' + kebabCase(arr[arr.length - 1].split('.js').join('') + suffix);
+            break;
         default:
-            return writePath + '/' + snakeCase(arr[arr.length - 1].split('.js').join('')).toUpperCase() + '_DOCS.md';
+            value = snakeCase(arr[arr.length - 1].split('.js').join('') + suffix);
     }
+
+    return writePath + '/' + value + '.md';
 }
 
 switch (true) {
