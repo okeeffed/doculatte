@@ -49,7 +49,6 @@ const help = `
     -t                      Output name type VALUES=[snake|start|camel|kebab] (default is snake, overriden by -n)
     -p                      Prefix doc file name (overriden by -n)
     -s                      Suffix doc file name (overriden by -n, default is "docs") 
-    -o                      path/to/output folder (moves all written doc files)
     -u                      Set output doc name to uppercase
 
     Examples
