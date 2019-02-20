@@ -74,6 +74,158 @@ $ doculatte help
 npx doculatte run
 ```
 
+## Basic Example
+
+Given a basic folder structure:
+
+```sh
+tmp
+├── five
+│   └── index.js
+├── four
+│   └── index.js
+├── one
+│   └── index.js
+├── seven
+│   └── index.js
+├── six
+│   └── index.js
+├── three
+│   └── index.js
+└── two
+    └── index.js
+```
+
+With example `index.js`:
+
+```javascript
+/**
+ * This file is a test example to generate DOCS.md
+ * 
+ * @author Dennis O'Keeffe
+ */
+class Mathematics {
+    /**
+     * Multiply the two args
+     * 
+     * @param {number} a 
+     * @param {number} b
+     * @memberof Mathematics
+     */
+    multiply = (a, b) => {
+        return a * b;
+    }
+
+    /**
+     * Add the two args together
+     * 
+     * @param {number} a 
+     * @param {number} b 
+     * @memberof Mathematics
+     */
+    add = (a, b) => {
+        return a + b;
+    }
+
+    /**
+     * Subtract the two args together
+     * 
+     * @param {number} a 
+     * @param {number} b 
+     * @memberof Mathematics
+     */
+    subtract = (a, b) => {
+        return a - b;
+    }
+}
+```
+
+Running:
+
+```sh
+doculatte run
+```
+
+Will produce structure:
+
+```sh
+.
+├── five
+│   ├── index.js
+│   └── index_docs.md
+├── four
+│   ├── index.js
+│   └── index_docs.md
+├── one
+│   ├── index.js
+│   └── index_docs.md
+├── seven
+│   ├── index.js
+│   └── index_docs.md
+├── six
+│   ├── index.js
+│   └── index_docs.md
+├── three
+│   ├── index.js
+│   └── index_docs.md
+└── two
+    ├── index.js
+    └── index_docs.md
+```
+
+With `index_docs.md` looking like:
+
+```md
+<a name="Mathematics"></a>
+
+## Mathematics
+This file is a test example to generate DOCS.md
+
+**Kind**: global class  
+**Author**: Dennis O'Keeffe  
+
+* [Mathematics](#Mathematics)
+    * [.multiply](#Mathematics.multiply)
+    * [.add](#Mathematics.add)
+    * [.subtract](#Mathematics.subtract)
+
+<a name="Mathematics.multiply"></a>
+
+### Mathematics.multiply
+Multiply the two args
+
+**Kind**: static property of [<code>Mathematics</code>](#Mathematics)  
+
+| Param | Type |
+| --- | --- |
+| a | <code>number</code> | 
+| b | <code>number</code> | 
+
+<a name="Mathematics.add"></a>
+
+### Mathematics.add
+Add the two args together
+
+**Kind**: static property of [<code>Mathematics</code>](#Mathematics)  
+
+| Param | Type |
+| --- | --- |
+| a | <code>number</code> | 
+| b | <code>number</code> | 
+
+<a name="Mathematics.subtract"></a>
+
+### Mathematics.subtract
+Subtract the two args together
+
+**Kind**: static property of [<code>Mathematics</code>](#Mathematics)  
+
+| Param | Type |
+| --- | --- |
+| a | <code>number</code> | 
+| b | <code>number</code> | 
+```
+
 ## FAQ
 
 TBD.
