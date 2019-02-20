@@ -6,12 +6,12 @@ var cwd = process.cwd();
 
 test('should return help text', async t => {
     const {stdout} = await execa('./cli.js', ['help']);
-    t.regex(stdout, /Recurisvely build markdown docs for JS files/gm);
+    t.regex(stdout, /Recursively build markdown docs for JS files/gm);
 });
 
 test('should return help when no valid argument pass', async t => {
     const {stdout} = await execa('./cli.js', ['howdy']);
-    t.regex(stdout, /Recurisvely build markdown docs for JS files/gm);
+    t.regex(stdout, /Recursively build markdown docs for JS files/gm);
 });
 
 test.serial('should generate .md files in tmp dir recursively', async t => {
@@ -36,17 +36,17 @@ test.serial('should correctly ignore when using "-i five,four,three,two,one"', a
 });
 
 test.serial('should correctly name output when passing "-n my-custom-name"', async t => {
-    const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-n', 'my-custom-name']);
+    const {stdout} = await execa('./cli.js', ['run', './tmp/five/index.js', '-n', 'my-custom-name']);
     const files = await recursive('./tmp', ['!*.md']);
     t.is(1, files.length);
-    t.regex(stdout, /Generated: tmp\/five\/my-custom-name.md/gm);
+    t.regex(stdout, /Generated: .\/tmp\/five\/my-custom-name.md/gm);
 });
 
 test.serial('should correctly use type "-t snake"', async t => {
     const {stdout} = await execa('./cli.js', ['run', 'tmp/five/index.js', '-t', 'snake']);
     const files = await recursive('./tmp', ['!*.md']);
     t.is(1, files.length);
-    t.regex(stdout, /Generated: tmp\/five\/my-custom-name.md/gm);
+    t.regex(stdout, /Generated: tmp\/five\/index_docs.md/gm);
 });
 
 /**

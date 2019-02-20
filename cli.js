@@ -154,7 +154,7 @@ const run = async() => {
 const setName = (writePath, arr, isFile) => {
     let value = '';
 
-    let suffix = ' docs.md';
+    let suffix = ' docs';
     let prefix = '';
 
     if (argv.s) {
@@ -184,6 +184,10 @@ const setName = (writePath, arr, isFile) => {
             break;
         default:
             value = snakeCase(arr[arr.length - 1].split('.js').join('') + suffix);
+    }
+
+    if (argv.u) {
+        value.toUpperCase();
     }
 
     return writePath + '/' + value + '.md';
