@@ -1,7 +1,7 @@
 {
   "name": "doculatte",
   "repository": "okeeffed/doculatte",
-  "version": "1.0.5",
+  "version": "1.0.4",
   "license": "MIT",
   "author": {
     "name": "Dennis O'Keeffe",
@@ -35,7 +35,6 @@
   "husky": {
     "hooks": {
       "pre-commit": "yarn test",
-      "post-commit": "yarn version --patch",
       "pre-push": "yarn test"
     }
   },
