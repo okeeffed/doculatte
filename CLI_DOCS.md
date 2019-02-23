@@ -41,9 +41,9 @@ Attempt to write the actual doc file
 
 **Kind**: inner method of [<code>run</code>](#run)  
 
-| Param         | Type            | Description      |
-| ------------- | --------------- | ---------------- |
-| file          | <code>\*</code> | File to convert  |
+| Param | Type | Description |
+| --- | --- | --- |
+| file | <code>\*</code> | File to convert |
 | writeDocsPath | <code>\*</code> | Path to write it |
 
 <a name="setName"></a>
@@ -54,9 +54,9 @@ Set document file name to be written.
 **Kind**: global function  
 **Returns**: <code>string</code> - Write path  
 
-| Param     | Type                              | Description                    |
-| --------- | --------------------------------- | ------------------------------ |
-| writePath | <code>string</code>               | Path to write to               |
-| arr       | <code>Array.&lt;string&gt;</code> | Path split into a string array |
-| isFile    | <code>boolean</code>              | Running in file or folder mode |
+| Param | Type | Description |
+| --- | --- | --- |
+| writePath | <code>string</code> | Path to write to |
+| arr | <code>Array.&lt;string&gt;</code> | Path split into a string array |
+| isFile | <code>boolean</code> | Running in file or folder mode |
 
