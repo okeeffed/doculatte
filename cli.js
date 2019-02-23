@@ -30,6 +30,7 @@ const options = {
 };
 
 const signale = new Signale(options);
+signale.config({displayTimestamp: true, displayDate: true});
 
 const help = `
     Doculatte
@@ -116,7 +117,7 @@ const run = async() => {
 
         let target = cwd;
         if (!isFile && typeof argv._[1] !== 'undefined') {
-            target = cwd + '/' + argv._[1];
+            target = path.resolve(argv._[1]);
         }
 
         let ignoreFiles = [];
@@ -137,7 +138,7 @@ const run = async() => {
             signale.info('Listing files that docs can be written for...');
             files.map(d => signale.info(d));
             signale.success('doculatte ls completed');
-            process.exit(0);
+            process.exit();
         }
 
         signale.info('Generating DOCS.md files');
