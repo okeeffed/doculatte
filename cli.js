@@ -18,19 +18,20 @@ const camelCase = require('lodash.camelcase');
 const startCase = require('lodash.startcase');
 const snakeCase = require('lodash.snakecase');
 const path = require('path');
+const jsdocConfig = path.resolve(__dirname, './jsdoc2md.json');
 
 const options = {
-    types: {
-        warning: {
-            badge: '⚠',
-            color: 'yellow',
-            label: 'warning'
-        }
+  types: {
+    warning: {
+      badge: '⚠',
+      color: 'yellow',
+      label: 'warning'
     }
+  }
 };
 
 const signale = new Signale(options);
-signale.config({displayTimestamp: true, displayDate: true});
+signale.config({ displayTimestamp: true, displayDate: true });
 
 const help = `
     Doculatte
@@ -88,83 +89,88 @@ const help = `
  * in the recursive function and not in the folders specified
  * and generate documentation if it can.
  */
-const run = async() => {
-    try {
-        signale.start('Running docs ' + argv._[0]);
+const run = async () => {
+  try {
+    signale.start('Running docs ' + argv._[0]);
 
-        /**
-         * Attempt to write the actual doc file
-         *
-         * @param {*} file File to convert
-         * @param {*} writeDocsPath Path to write it
-         */
-        const createFile = (file, writeDocsPath) => {
-            const mdOutput = jsdoc2md.renderSync({files: file});
+    /**
+     * Attempt to write the actual doc file
+     *
+     * @param {*} file File to convert
+     * @param {*} writeDocsPath Path to write it
+     */
+    const createFile = (file, writeDocsPath) => {
+      console.log(file);
+      const mdOutput = jsdoc2md.renderSync({
+        files: file,
+        configure: jsdocConfig
+      });
 
-            if (mdOutput !== '') {
-                fs.writeFileSync(writeDocsPath, mdOutput);
-                signale.success('Generated:', writeDocsPath);
-            } else {
-                signale.warning('DOCS.md file empty - not writing file', writeDocsPath);
-            }
-        };
+      console.log('mdOutput', mdOutput);
 
-        const isFile = typeof argv._[1] !== 'undefined'
-            ? !fs
-                .lstatSync(argv._[1])
-                .isDirectory()
-            : false;
+      if (mdOutput !== '') {
+        fs.writeFileSync(writeDocsPath, mdOutput);
+        signale.success('Generated:', writeDocsPath);
+      } else {
+        signale.warning('DOCS.md file empty - not writing file', writeDocsPath);
+      }
+    };
 
-        let target = cwd;
-        if (!isFile && typeof argv._[1] !== 'undefined') {
-            target = path.resolve(argv._[1]);
-        }
+    const isFile =
+      typeof argv._[1] !== 'undefined'
+        ? !fs.lstatSync(argv._[1]).isDirectory()
+        : false;
 
-        let ignoreFiles = [];
-        if (argv.i) {
-            ignoreFiles = argv
-                .i
-                .split(',');
-        }
-
-        const files = isFile
-            ? [argv._[1]]
-            : await recursive(target, [
-                'node_modules', ...ignoreFiles,
-                '!*.js'
-            ]);
-
-        if (argv._[0] === 'ls') {
-            signale.info('Listing files that docs can be written for...');
-            files.map(d => signale.info(d));
-            signale.success('doculatte ls completed');
-            process.exit();
-        }
-
-        signale.info('Generating DOCS.md files');
-
-        files.map(async(file) => {
-            try {
-                signale.info('Reading file:', file);
-                // 1. Get write path
-                const arr = file.split('/');
-                const writePath = arr
-                    .slice(0, arr.length - 1)
-                    .join('/');
-
-                const writeDocsPath = setName(writePath, arr, isFile);
-
-                // 2. If exists, check for overwrite, else create
-                createFile(file, writeDocsPath);
-            } catch (err) {
-                signale.error(new Error(err));
-            }
-        });
-
-    } catch (err) {
-        console.error(err.message);
+    let target = cwd;
+    if (!isFile && typeof argv._[1] !== 'undefined') {
+      target = path.resolve(argv._[1]);
     }
-}
+
+    let ignoreFiles = [];
+    if (argv.i) {
+      ignoreFiles = argv.i.split(',');
+    }
+
+    const files = isFile
+      ? [argv._[1]]
+      : await recursive(target, [
+          'node_modules',
+          ...ignoreFiles,
+          '!*.{js,ts,jsx,tsx}'
+        ]);
+
+    if (process.env.DEBUG == '1') {
+      console.log('files', files);
+    }
+
+    if (argv._[0] === 'ls') {
+      signale.info('Listing files that docs can be written for...');
+      files.map((d) => signale.info(d));
+      signale.success('doculatte ls completed');
+      process.exit();
+    }
+
+    signale.info('Generating DOCS.md files');
+
+    files.map(async (file) => {
+      try {
+        signale.info('Reading file:', file);
+        // 1. Get write path
+        const arr = file.split('/');
+        const writePath = arr.slice(0, arr.length - 1).join('/');
+
+        const writeDocsPath = setName(writePath, arr, isFile);
+
+        // 2. If exists, check for overwrite, else create
+        createFile(file, writeDocsPath);
+      } catch (err) {
+        signale.error(new Error(err));
+      }
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+};
 
 /**
  * Set document file name to be written.
@@ -176,51 +182,49 @@ const run = async() => {
  * @returns {string} Write path
  */
 const setName = (writePath, arr, isFile) => {
-    let value = '';
+  let value = '';
 
-    let suffix = ' docs';
-    let prefix = '';
+  let suffix = ' docs';
+  let prefix = '';
 
-    if (argv.s) {
-        suffix = ' ' + argv.s;
-    }
+  if (argv.s) {
+    suffix = ' ' + argv.s;
+  }
 
-    if (argv.p) {
-        prefix = argv.p + ' ';
-    }
+  if (argv.p) {
+    prefix = argv.p + ' ';
+  }
 
-    const mainBody = prefix + arr[arr.length - 1]
-        .split('.js')
-        .join('') + suffix;
+  const mainBody = prefix + arr[arr.length - 1].split('.js').join('') + suffix;
 
-    switch (true) {
-        case argv.n && isFile:
-            value = argv.n;
-            break;
-        case argv.t && argv.t === 'start':
-            value = startCase(mainBody);
-            break;
-        case argv.t && argv.t === 'camel':
-            value = camelCase(mainBody);
-            break;
-        case argv.t && argv.t === 'kebab':
-            value = kebabCase(mainBody);
-            break;
-        default:
-            value = snakeCase(arr[arr.length - 1].split('.js').join('') + suffix);
-    }
+  switch (true) {
+    case argv.n && isFile:
+      value = argv.n;
+      break;
+    case argv.t && argv.t === 'start':
+      value = startCase(mainBody);
+      break;
+    case argv.t && argv.t === 'camel':
+      value = camelCase(mainBody);
+      break;
+    case argv.t && argv.t === 'kebab':
+      value = kebabCase(mainBody);
+      break;
+    default:
+      value = snakeCase(arr[arr.length - 1].split('.js').join('') + suffix);
+  }
 
-    if (argv.u) {
-        value = value.toUpperCase();
-    }
+  if (argv.u) {
+    value = value.toUpperCase();
+  }
 
-    return writePath + '/' + value + '.md';
-}
+  return writePath + '/' + value + '.md';
+};
 
 switch (true) {
-    case argv._[0] === 'run' || argv._[0] === 'ls':
-        run();
-        break;
-    default:
-        console.log(help);
+  case argv._[0] === 'run' || argv._[0] === 'ls':
+    run();
+    break;
+  default:
+    console.log(help);
 }
